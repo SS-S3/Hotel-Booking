@@ -45,14 +45,17 @@ const clerkWebhooks = async (req, res) => {
             default:
                 break;
         } 
+        console.log('Creating user with data:', userData);
+        await User.create(userData);
+        console.log('User created successfully');
 
         res.json({ success: true, message: "Webhook Received" });
-
     } catch (error) {
         console.log("Webhook error:", error.message);
-        res.json({ success: false, message: error.message });
-    } 
-    
+        res.status(500).json({ success: false, message: error.message });
+    }
+
+
 };
 
 export default clerkWebhooks;
