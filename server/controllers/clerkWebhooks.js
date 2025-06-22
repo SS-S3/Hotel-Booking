@@ -1,5 +1,6 @@
 import { Webhook } from 'svix';
 import User from '../models/user.js';
+import mongoose from 'mongoose';
 
 const clerkWebhooks = async (req, res) => {
     try {
@@ -9,6 +10,10 @@ const clerkWebhooks = async (req, res) => {
         if (!webhookSecret) {
             console.error('CLERK_WEBHOOK_SECRET not found in environment variables');
             return res.status(500).json({ error: 'Webhook secret not configured' });
+        }
+        if (mongoose.connection.readyState !== 1) {
+            console.error('Database connection not ready');
+            return res.status(500).json({ error: 'Database unavailable' });
         }
 
         // Get headers
@@ -111,13 +116,21 @@ const handleUserUpdated = async (userData) => {
 };
 
 // Helper function to handle user deletion
+
 const handleUserDeleted = async (userData) => {
     try {
+        // Ensure connection is ready
+        if (mongoose.connection.readyState !== 1) {
+            console.error('Cannot delete user - DB connection not ready');
+            return;
+        }
+        
         await User.findByIdAndDelete(userData.id);
         console.log('User deleted successfully:', userData.id);
     } catch (error) {
         console.error('Error deleting user:', error);
     }
 };
+
 
 export default clerkWebhooks;
