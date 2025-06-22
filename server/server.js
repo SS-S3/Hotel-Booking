@@ -11,15 +11,17 @@ const app = express();
 
 app.use(cors());
 
-// Raw body parser for webhook route (BEFORE express.json())
-app.use('/api/clerk', express.raw({ type: 'application/json' }));
+// Fix: Isolate webhook route BEFORE express.json()
+app.post('/api/clerk', 
+  // 1. Raw body parser for webhook route
+  express.raw({ type: 'application/json' }),
+  // 2. Directly use webhook handler
+  clerkWebhooks
+);
 
 // Regular JSON middleware for other routes
 app.use(express.json());
 app.use(clerkMiddleware());
-
-// API for clerkWebhook
-app.use("/api/clerk", clerkWebhooks);
 
 app.get('/', (req, res) => res.send("API Working fine!"));
 
