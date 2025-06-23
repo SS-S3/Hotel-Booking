@@ -15,6 +15,8 @@ import { Dock } from "./components/Dock.jsx";
 
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 
 if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key");
