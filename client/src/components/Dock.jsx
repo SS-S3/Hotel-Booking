@@ -43,7 +43,7 @@ export function Dock() {
   ];
 
   return (
-    <div className="flex mt-8 items-center justify-center h-[5rem] w-full bottom-0 z-50 dark:bg-gray-800">
+    <div className="flex mt-5 items-center justify-center h-[5rem] w-full bottom-10 z-50 dark:bg-gray-800">
       <p>
         <span className="text-3xl font-bold text-gray-800 dark:text-gray-200 ml-5">
           The Glen

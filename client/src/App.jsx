@@ -7,6 +7,7 @@ import ResizableNavbar from "./components/Navbar.jsx";
 
 import Home from "./pages/Home.jsx";
 import Hotels from "./pages/Hotel.jsx";
+import Booking from "./pages/Booking.jsx";
 import Experiences from "./pages/Experiences.jsx";
 import AboutUs from "./pages/AboutUs.jsx";
 import MyBookings from "./pages/MyBookings.jsx";
@@ -31,6 +32,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/index" element={<Home />} />
           <Route path="/hotel" element={<Hotels />} />
+          <Route path="/booking/:hotelId" element={<Booking />} />
           <Route path="/experiences" element={<Experiences />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/my-bookings" element={<MyBookings />} />

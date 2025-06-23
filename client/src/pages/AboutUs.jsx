@@ -3,7 +3,7 @@ import React from "react";
 import { AboutHero } from "../components/AboutHero";
 import { AboutContent } from "../components/AboutContent";
 import { AnimatedTestimonialsDemo } from "../components/Testimonial";
-import { VortexDemo } from "../components/Footer";
+
 
 const AboutUs = () => {
   return (

@@ -4,6 +4,9 @@ import cors from "cors";
 import connectDB from "./configs/db.js";
 import { clerkMiddleware } from '@clerk/express';
 import clerkWebhooks from "./controllers/clerkWebhooks.js";
+import userRouter from "./routes/userRoutes.js";
+import listingRouter from "./routes/listingRoutes.js";
+import bookingRouter from "./routes/bookingRoutes.js"; // ADDED
 
 const app = express();
 app.use(cors());
@@ -27,7 +30,13 @@ const startServer = async () => {
         // Other middleware and routes
         app.use(express.json());
         app.use(clerkMiddleware());
+
+        // --- ROUTES START ---
         app.get('/', (req, res) => res.send("API Working fine!"));
+        app.use('/api/user', userRouter);
+        app.use('/api/listing', listingRouter);
+        app.use('/api/bookings', bookingRouter); // ADDED
+        // --- ROUTES END ---
 
         // Error handling
         app.use((error, req, res, next) => {
