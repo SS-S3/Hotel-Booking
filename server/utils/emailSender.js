@@ -1,13 +1,16 @@
 import nodemailer from 'nodemailer';
 
-// Create transporter using environment variables
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
+const transporter = nodemailer.createTransporter({
+    host: 'smtp-relay.brevo.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS
+    }
+  });
+  
+
 
 export const sendConfirmationEmail = async (userEmail, booking, hotelDetails, userName) => {
   const checkInDate = new Date(booking.checkInDate);
@@ -15,7 +18,7 @@ export const sendConfirmationEmail = async (userEmail, booking, hotelDetails, us
   const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
 
   const mailOptions = {
-    from: `"Glen Hotel Booking" <${process.env.EMAIL_USER}>`,
+    from: `"Glen Hotel Booking" <${process.env.SENDER_EMAIL}>`,
     to: userEmail,
     subject: '🎉 Glen Booking Confirmation - Your Stay is Confirmed!',
     html: `

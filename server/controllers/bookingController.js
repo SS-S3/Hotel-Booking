@@ -1,7 +1,7 @@
 import Booking from '../models/Booking.js';
 import User from '../models/user.js';
 import Listing from '../models/listing.js';
-// import { sendConfirmationEmail, sendBookingUpdateEmail } from '../utils/emailSender.js';
+import { sendConfirmationEmail, sendBookingUpdateEmail } from '../utils/emailSender.js';
 
 // Calculate total booking price: per person price * guests * number of days
 export const calculateBookingPrice = async (req, res) => {
