@@ -3,6 +3,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://hotel-booking-back-green.vercel.app/api/:path*"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/index.html"
     }
   ]
 }
