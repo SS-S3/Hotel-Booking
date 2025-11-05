@@ -1,5 +1,5 @@
 // components/BookingCards.jsx
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FollowerPointerCard } from "./ui/following-pointer";
 
@@ -66,18 +66,64 @@ export function BookingCards() {
     },
   ];
 
+  // Manage local bookings persisted by Booking page
+  const [localBookingsState, setLocalBookingsState] = useState([]);
+
+  const loadLocalBookings = () => {
+    try {
+      const raw = localStorage.getItem('localBookings');
+      if (!raw) return setLocalBookingsState([]);
+      const parsed = JSON.parse(raw || '[]');
+      const mapped = parsed.map((b, idx) => ({
+        id: `local-${b.id}-${idx}`,
+        title: b.title,
+        subtitle: b.subtitle || b.title,
+        location: b.location,
+        status: b.status || 'pending',
+        checkIn: b.checkIn,
+        checkOut: b.checkOut,
+        guests: b.guests,
+        price: b.price,
+        nights: b.nights || 1,
+        src: b.src || 'https://images.unsplash.com/photo-1501117716987-c8e5663d62b6?q=80&w=1600&auto=format&fit=crop',
+        bookingRef: b.bookingRef || b.id,
+      }));
+      setLocalBookingsState(mapped);
+    } catch (e) {
+      console.error('Error reading local bookings', e);
+      setLocalBookingsState([]);
+    }
+  };
+
+  useEffect(() => {
+    loadLocalBookings();
+    const onStorage = (e) => {
+      if (e.key === 'localBookings') loadLocalBookings();
+    };
+    const onLocalUpdate = () => loadLocalBookings();
+    window.addEventListener('storage', onStorage);
+    window.addEventListener('localBookingsUpdated', onLocalUpdate);
+    return () => {
+      window.removeEventListener('storage', onStorage);
+      window.removeEventListener('localBookingsUpdated', onLocalUpdate);
+    };
+  }, []);
+
+  // Prepend local bookings so they show first
+  const mergedBookings = [...localBookingsState, ...bookingCards];
+
   // Filter bookings based on active filter
   const filteredBookings = useMemo(() => {
     if (activeFilter === 'all') {
-      return bookingCards;
+      return mergedBookings;
     }
-    return bookingCards.filter(booking => booking.status === activeFilter);
-  }, [activeFilter]);
+    return mergedBookings.filter(booking => booking.status === activeFilter);
+  }, [activeFilter, localBookingsState]);
 
   // Get count for each filter
   const getFilterCount = (filterType) => {
-    if (filterType === 'all') return bookingCards.length;
-    return bookingCards.filter(booking => booking.status === filterType).length;
+    if (filterType === 'all') return mergedBookings.length;
+    return mergedBookings.filter(booking => booking.status === filterType).length;
   };
 
   const getStatusColor = (status) => {
